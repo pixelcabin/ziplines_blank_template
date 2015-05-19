@@ -1,0 +1,23 @@
+{
+  "name": "ziplines_blank_template",
+  "description": "Blank Ziplines project template",
+  "repository" :  {
+    "type" : "git"
+  , "url" : "https://github.com/pixelcabin/ziplines_blank_template.git"
+  },
+  "version": "0.1.0",
+  "devDependencies": {
+    "glob": "~3.2.3",
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-sass": "~0.7.0",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.3.1",
+    "growl": "~1.7.0",
+    "grunt-contrib-watch": "~0.6.0",
+    "grunt-pageres": "^1.1.0",
+    "grunt-shopify": "~0.5.0"
+  }
+}

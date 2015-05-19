@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Home Page Settings",
+    "settings": [
+      {
+        "type": "text",
+        "id": "home_page"
+      }
+    ]
+  }
+]

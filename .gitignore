@@ -1,0 +1,8 @@
+/.idea
+/.sass-cache
+/node_modules
+credentials.json
+.ruby-version
+/shop/assets/foundation
+/shop/assets/checkout.css
+/shop/assets/checkout.mobile.css
