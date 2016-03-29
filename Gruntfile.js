@@ -5,14 +5,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-pageres');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
-  var pageres_sizes = ['1024x768', '320x480', '320x568', '375x667', '360x640', '960x600', '1200x800', '800x600', '1440x900', '1080x1600', '2560x1440'];
-  var pagres_crop = true;
+  var is_production = (grunt.option('env') == 'production');
 
   grunt.initConfig({
-    credentials: grunt.file.readJSON('credentials.json'),
+    credentials: is_production ? '' : grunt.file.readJSON('credentials.json'),
     url: '',
     shopify: {
       options: {
@@ -28,41 +26,6 @@ module.exports = function(grunt) {
       reset: [
         'shop/**/*.*'
       ]
-    },
-
-    pageres: {
-      shopify_home: {
-        options: {
-          url: '<%= url %>',
-          sizes: pageres_sizes,
-          dest: 'screens/',
-          crop: pagres_crop
-        }
-      },
-      shopify_collections: {
-        options: {
-          url: '<%= url %>/collections/',
-          sizes: pageres_sizes,
-          dest: 'screens/',
-          crop: pagres_crop
-        }
-      },
-      shopify_product: {
-        options: {
-          url: '<%= url %>/collections/',
-          sizes: pageres_sizes,
-          dest: 'screens/',
-          crop: pagres_crop
-        }
-      },
-      shopify_blog: {
-        options: {
-          url: '<%= url %>/blog/news',
-          sizes: pageres_sizes,
-          dest: 'screens/',
-          crop: pagres_crop
-        }
-      }
     },
 
     sass: {
@@ -105,29 +68,29 @@ module.exports = function(grunt) {
       development: {
         options: {
           mangle: false,
-          beautify: false,
-          compress: false
+          beautify: true,
+          compress: false,
+          preserveComments: 'all'
         },
         files: {
-          'shop/assets/app.min.js': ['src/js/app/**/*.js']
+          'shop/assets/app.min.js': [
+            'src/js/third_party/**/*.js',
+            'src/js/app/**/*.js'
+          ]
         }
       },
       production: {
         options: {
           mangle: true,
-          compress: true
+          compress: {
+            drop_console: true
+          }
         },
         files: {
-          'shop/assets/app.min.js': ['src/js/app/**/*.js']
-        }
-      },
-      third: {
-        options: {
-          mangle: false,
-          compress: false
-        },
-        files: {
-          'shop/assets/third_lib.min.js': ['src/js/third_party/**/*.js']
+          'shop/assets/app.min.js': [
+            'src/js/third_party/**/*.js',
+            'src/js/app/**/*.js'
+          ]
         }
       }
     },
@@ -142,7 +105,6 @@ module.exports = function(grunt) {
       ]
     },
 
-    environment: 'development',// Set to 'development' or 'production', then restart grunt:watch
     watch: {
       shopify: {
         files: ['shop/**'],
@@ -151,20 +113,19 @@ module.exports = function(grunt) {
           livereload: true
         }
       },
-      js3rd: {
-        files: ['src/js/third_party/**'],
-        tasks: ['uglify:third']
-      },
+
       js: {
-        files: ['src/js/app/**'],
-        tasks: ['jshint', 'uglify:<%= environment %>']
+        files: ['src/js/**'],
+        tasks: ['jshint', 'uglify:development']
       },
       sass: {
         files: ['src/scss/**'],
-        tasks: ['sass:<%= environment %>']
+        tasks: ['sass:development']
       }
     }
   });
 
   grunt.registerTask('default', ['shopify']);
+  grunt.registerTask('compile:development', ['jshint', 'uglify:development', 'sass:development']);
+  grunt.registerTask('compile:production', ['jshint', 'uglify:production', 'sass:production']);
 };
